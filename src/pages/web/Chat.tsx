@@ -67,7 +67,7 @@ export default function Chat() {
           <div ref={messagesEndRef} />
         </div>
 
-        <div className="absolute bottom-0 flex w-full p-5 pt-8 border-t-2 border-gray-200 rounded-lg">
+        <div className="absolute bottom-0 flex w-full p-5 pt-8 border-t-2 border-gray-200 rounded-t-lg">
           <TextInput
             id="message"
             type="text"
