@@ -1,9 +1,8 @@
 interface InputLabelProps {
-  value?: string; // Define value as an optional string prop
+  value?: string;
   className?: string;
   htmlFor?: string;
   children?: React.ReactNode;
-  // ... other props
 }
 export default function InputLabel({
   value,

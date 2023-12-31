@@ -1,7 +1,15 @@
-export default function InputError({ message, className = '', ...props }) {
-    return message ? (
-        <p {...props} className={'text-sm text-red-600  ' + className}>
-            {message}
-        </p>
-    ) : null;
+interface InputErrorProps {
+  message: null | string;
+  className: string;
+}
+export default function InputError({
+  message,
+  className = "",
+  ...props
+}: InputErrorProps) {
+  return message ? (
+    <p {...props} className={"text-sm text-red-600  " + className}>
+      {message}
+    </p>
+  ) : null;
 }

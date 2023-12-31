@@ -30,6 +30,7 @@ export default function Chat() {
       } catch (error) {
         console.log(error);
       }
+
       setChatMessages((prevMessages) => [...prevMessages, message]);
       setNewMessage("");
     }
