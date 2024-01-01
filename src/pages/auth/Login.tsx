@@ -1,13 +1,14 @@
-import InputLabel from "../../components/InputLabel";
-import TextInput from "../../components/TextInput";
-import PrimaryButton from "../../components/PrimaryButton";
+import InputLabel from "../../components/common/InputLabel";
+import TextInput from "../../components/common/TextInput";
+import PrimaryButton from "../../components/common/PrimaryButton";
 import { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import InputError from "../../components/InputError";
+import InputError from "../../components/common/InputError";
 import Cookies from "js-cookie";
-import { AuthContext } from "../../providers/AuthProvider";
-import { useContext } from "react";
+import { connect } from "react-redux";
+import { login } from "../../redux/actions/authActions";
+import { urlConfig } from "../../urlConfig";
 
 interface FormData {
   mobile: null | string;
@@ -18,9 +19,12 @@ interface FormError {
   password: null | string;
 }
 
-export default function Login() {
-  const useAuth = useContext(AuthContext);
-  console.log(useAuth);
+interface LoginProps {
+  login: (userData: { userId: number; userName: string }) => void;
+}
+
+const Login: React.FC<LoginProps> = ({ login }) => {
+  const naviagte = useNavigate();
   const [formData, setFormData] = useState<FormData>({
     mobile: null,
     password: null,
@@ -29,7 +33,6 @@ export default function Login() {
     mobile: null,
     password: null,
   });
-  const naviagte = useNavigate();
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData({
@@ -37,8 +40,7 @@ export default function Login() {
       [name]: value,
     });
   };
-
-  const validate = (e: React.FormEvent) => {
+  const validateForm = (e: React.FormEvent) => {
     e.preventDefault();
     let newFormErrors: FormError = { mobile: null, password: null };
     let hasError = false;
@@ -48,7 +50,7 @@ export default function Login() {
     }
     if (formData.password == "") {
       newFormErrors.password = "لطفا رمز عبور خود را وارد کنید.";
-      console.log(formError);
+
       hasError = true;
     }
     setFormError(newFormErrors);
@@ -59,33 +61,43 @@ export default function Login() {
   const handleSubmit = async () => {
     let newFormErrors: FormError = { mobile: null, password: null };
     try {
+      const domainUrl = urlConfig;
       const response = await axios.post(
-        "http://192.168.1.129:8000/api/admin/auth/login",
+        `https://${domainUrl}/api/admin/auth/login`,
         { mobile: formData.mobile, password: formData.password }
       );
+
       if (response.data.accessToken) {
-        useAuth?.login(response.data);
         const token = response.data.accessToken;
+        const userId = response.data.user.id;
+        const userName = response.data.user.full_name;
+        login({ userId, userName });
         Cookies.set("bearerToken", token, {
-          expires: 7,
+          expires: 1,
           secure: true,
           sameSite: "strict",
         });
-        console.log(token);
+
         naviagte("/chat");
-      } else if (response.data.message == "Unauthorized") {
-        newFormErrors.password = "اطلاعات وارد شده صحیح نمی باشد.";
       }
-    } catch (error) {
-      newFormErrors.password = "ارتباط با سرور با مشکل مواجه شده است.";
+    } catch (error: any) {
+      const errorMessage =
+        error?.response?.data?.message ?? "خطا در ارتباط با سرور!";
+
+      if (errorMessage === "Unauthorized") {
+        newFormErrors.password = "اطلاعات وارد شده صحیح نمی باشد.";
+      } else {
+        newFormErrors.password = errorMessage;
+      }
     }
     setFormError(newFormErrors);
   };
+
   return (
     <>
       <div className="flex items-center justify-center h-screen">
         <div className="w-1/4 shadow-lg border-2 border-gray-200 rounded-lg ">
-          <form onSubmit={validate} className="p-10 ">
+          <form onSubmit={validateForm} className="p-10 ">
             <div>
               <InputLabel htmlFor="mobile" value="شماره همراه" />
               <TextInput
@@ -123,4 +135,10 @@ export default function Login() {
       </div>
     </>
   );
-}
+};
+
+const mapDispatchToProps = {
+  login,
+};
+
+export default connect(null, mapDispatchToProps)(Login);

@@ -1,19 +1,16 @@
 import { BrowserRouter } from "react-router-dom";
-import Header from "./components/Header";
+import Header from "./components/root/Header";
 import Routes from "./routes/AllRoutes";
-import { AuthProvider } from "./providers/AuthProvider";
 
 function App() {
   return (
     <>
-      <AuthProvider>
-        <div className="relative h-screen">
-          <BrowserRouter>
-            <Header className="" />
-            <Routes />
-          </BrowserRouter>
-        </div>
-      </AuthProvider>
+      <div className="relative h-screen">
+        <BrowserRouter>
+          <Header className="" />
+          <Routes />
+        </BrowserRouter>
+      </div>
     </>
   );
 }
