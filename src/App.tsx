@@ -1,8 +1,16 @@
 import { BrowserRouter } from "react-router-dom";
 import Header from "./components/root/Header";
 import Routes from "./routes/AllRoutes";
+import { authState } from "./redux/actions/authActions";
+import { connect } from "react-redux";
+import Cookies from "js-cookie";
+import { useDispatch } from "react-redux";
 
-function App() {
+function App({ isAuthenticated }: { isAuthenticated: boolean }) {
+  const dispatch = useDispatch();
+  if (!isAuthenticated && Cookies.get("bearerToken")) {
+    dispatch(authState());
+  }
   return (
     <>
       <div className="relative h-screen">
@@ -15,4 +23,12 @@ function App() {
   );
 }
 
-export default App;
+const mapStateToProps = (state: any) => ({
+  isAuthenticated: state.auth.isAuthenticated,
+});
+
+const mapDispatchToProps = {
+  authState,
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(App);

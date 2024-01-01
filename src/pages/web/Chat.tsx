@@ -23,6 +23,7 @@ export default function Chat() {
   const [isDragOver, setIsDragOver] = useState<boolean>(false);
   const navigate = useNavigate();
 
+  //handle change in message input
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setNewMessage(e.target.value);
   };
@@ -41,6 +42,7 @@ export default function Chat() {
     }
   };
 
+  //handle when user press Enter on message input
   const handleKeyPress = (e: React.KeyboardEvent) => {
     if (e.key === "Enter") {
       e.preventDefault();
@@ -48,6 +50,7 @@ export default function Chat() {
     }
   };
 
+  //when new message added it would scroll down
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   };
@@ -56,6 +59,7 @@ export default function Chat() {
     scrollToBottom();
   }, [chatMessages]);
 
+  //handle when file uploaded changes before it been send
   const handleFileChange = (
     event?: ChangeEvent<HTMLInputElement> | null,
     dropFile?: File
@@ -72,6 +76,7 @@ export default function Chat() {
     }
   };
 
+  //when Attach button clicked it will trigger the file input
   const handleButtonClick = () => {
     fileInputRef.current?.click();
   };
@@ -98,6 +103,7 @@ export default function Chat() {
   };
 
   const selectChat = (userId: number) => {
+    setChatMessages([]);
     navigate(`/chat?user_id=${userId}`, { replace: true });
   };
 

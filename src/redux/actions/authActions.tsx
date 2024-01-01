@@ -4,3 +4,9 @@ export const login = (userData: { userId: number; userName: string }) => {
     payload: userData,
   };
 };
+
+export const authState = () => {
+  return {
+    type: "AuthSTATE",
+  };
+};

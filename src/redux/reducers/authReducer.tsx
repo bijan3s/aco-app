@@ -29,6 +29,11 @@ export const authReducer = (
         userId: action.payload?.userId ?? state.userId,
         userName: action.payload?.userName ?? state.userName,
       };
+    case "AuthSTATE":
+      return {
+        ...state,
+        isAuthenticated: true,
+      };
 
     default:
       return state;
