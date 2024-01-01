@@ -1,6 +1,6 @@
 interface InputErrorProps {
   message: null | string;
-  className: string;
+  className?: string;
 }
 export default function InputError({
   message,

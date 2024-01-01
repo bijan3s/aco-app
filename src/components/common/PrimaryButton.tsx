@@ -2,16 +2,19 @@ interface ButtonProps {
   className?: string;
   children?: React.ReactNode;
   onClick?: (event: React.MouseEvent<HTMLButtonElement>) => void;
+  type?: "button" | "submit" | "reset";
 }
 
 export default function PrimaryButton({
   className = "",
   children,
+  type = "button",
   onClick,
   ...props
 }: ButtonProps) {
   return (
     <button
+      type={type}
       {...props}
       onClick={onClick}
       className={
